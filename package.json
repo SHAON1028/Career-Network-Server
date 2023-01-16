@@ -1,5 +1,26 @@
 {
   "dependencies": {
-    "express": "^4.18.2"
-  }
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongodb": "^4.13.0",
+    "nodemon": "^2.0.20"
+  },
+  "name": "career-network-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "dev":"nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHAON1028/Career-Network-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SHAON1028/Career-Network-Server/issues"
+  },
+  "homepage": "https://github.com/SHAON1028/Career-Network-Server#readme",
+  "description": ""
 }
