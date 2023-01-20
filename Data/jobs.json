@@ -1,0 +1,182 @@
+[
+    {
+       
+        "id": "01",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 5,
+        "job_title": "Front End Developer",
+        "category_name": "Web Developer",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      },
+    {
+       
+        "id": "02",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 2,
+        "job_title": "Junior Web Designer",
+        "category_name": "Designer",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      },
+    {
+       
+        "id": "01",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 5,
+        "job_title": "Sales Officer",
+        "category_name": "Sales",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      },
+    {
+       
+        "id": "01",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 5,
+        "job_title": "Marketing Officer",
+        "category_name": "Marketing",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      },
+    {
+       
+        "id": "01",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 5,
+        "job_title": "English Teacher",
+        "category_name": "Education",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      },
+    {
+       
+        "id": "01",
+        "isPaid":false,
+        "isVerify":false,
+        "vacancy": 2,
+        "job_title": "Content Writer",
+        "category_name": "Writing And Editing",
+        "deadline":"1 February 2023",
+        "description":"We all have important information we need to manage, and protecting it should be easy. Over 100,000 businesses and millions of people log in to 1Password to unlock smart, simple access to everything they care about. Our vision is to create a safer, simpler digital future for everyone, and our culture values simplicity, honesty and a human-centric approach to solving problems. Come help us unlock peace of mind so everyone can stay safer online.",
+        "location":"Remote",
+        "duty_hours":"9 am to 6 pm",
+        "salary":"500",
+        "experience":[
+          "Experience working in Go, which is what we write our servers in.",
+          "A strong understanding of how servers and clients interact, API design, multi-service architecture, efficient database design, and experience scaling a system into millions of users and terabytes of data.",
+          "Frontend experience with React/Typescript would be a bonus"
+        ],
+        "logo":"",
+        "requirement": [
+            "As a technical leader you would help chart the path to our technical future as we scale the product to meet the demand and scale of our growing business",
+            "To build integrations with third party systems as we evolve our product deeper into the B2B word",
+            "To troubleshoot and fix bugs, and provide code and design reviews for your team.",
+            "To be able to lead architecture direction in Go with robust unit and integration testing structure",
+            "To document the decisions you make when creating new features so the rest of your team members can follow along.",
+            "To keep security and privacy front of mind in all aspects of your work.",
+            "To be a leader in a collaborative group where the team succeeds as a whole. Sponsoring a balance between the importance of life and deeply valuing our supportive and flexible work environment.",
+            "Advocate for improvements to product quality, security, and performance that have particular impact across your team."
+        ]
+      }
+]

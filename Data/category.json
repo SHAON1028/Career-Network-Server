@@ -1,0 +1,32 @@
+[
+    {
+        "id":"01",
+        "category_name":"Art",
+        "img":"https://i.ibb.co/PZk8L7v/art-1.jpg"
+    },
+    {
+        "id":"02",
+        "category_name":"Food",
+        "img":"https://i.ibb.co/gj7Pn9y/food.png"
+    },
+    {
+        "id":"03",
+        "category_name":"Health",
+        "img":"https://i.ibb.co/L17Yh3d/helth.png"
+    },
+    {
+        "id":"04",
+        "category_name":"Science",
+        "img":"https://i.ibb.co/4gCkvM4/science.jpg"
+    },
+    {
+        "id":"05",
+        "category_name":"Technology",
+        "img":"https://i.ibb.co/yYCwwxm/tecnology.png"
+    },
+    {
+        "id":"06",
+        "category_name":"Education",
+        "img":"https://i.ibb.co/MkXJngN/training.jpg"
+    }
+]
