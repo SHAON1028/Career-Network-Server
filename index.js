@@ -30,6 +30,13 @@ async function run() {
             res.send(result);
         });
        
+        app.post('/jobs', async (req, res) => {
+            const jobInfo = req.body;
+            console.log(jobInfo);
+            const result = await jobsCollecton.insertOne(jobInfo);
+            res.send(result);
+        });
+
         app.get('/categories', async(req, res)=>{
             const query = req.body;
             const result = await categoriesCollection.find(query).toArray()
