@@ -29,6 +29,7 @@ async function run() {
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
+       
         app.get('/categories', async(req, res)=>{
             const query = req.body;
             const result = await categoriesCollection.find(query).toArray()
