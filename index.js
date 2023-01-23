@@ -47,6 +47,15 @@ async function run() {
             const query = {category_name : name}
             const category = await jobsCollecton.find(query).toArray()
             res.send(category)
+        })
+        
+        //authraization check
+        
+         app.get("/checkit",async(req,res)=>{
+             const email = req.query.email
+             const query = {email:email}
+             const result = await userCollection.findOne(query)
+             res.send(result)
          })
 
 
