@@ -48,6 +48,12 @@ async function run() {
             const category = await jobsCollecton.find(query).toArray()
             res.send(category)
          })
+        app.get('/alljobs', async (req, res)=>{
+          
+            const query = {}
+            const category = await jobsCollecton.find(query).toArray()
+            res.send(category)
+         })
 
 
     }
