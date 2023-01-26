@@ -49,7 +49,7 @@ async function run() {
             res.send(category)
         })
         
-        //authraization check
+        //deshbord authraization check
         
          app.get("/checkit",async(req,res)=>{
              const email = req.query.email
