@@ -43,6 +43,17 @@ async function run() {
         const categoriesCollection = client.db('carrernetwork').collection('categories');
         const jobsCollecton = client.db('carrernetwork').collection('jobs');
 
+        const verifyAdmin = async (req, res, next) => {
+            const decodedEmail = req.decoded.email;
+            const query = { email: decodedEmail };
+            const user = await userCollection.findOne(query);
+
+            if (user?.role !== 'admin') {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            next();
+        }
+
         app.post('/user', async (req, res) => {
             const user = req.body;
             console.log(user);
