@@ -51,8 +51,11 @@ async function run() {
         app.get('/alljobs', async (req, res)=>{
           
             const query = {}
-            const category = await jobsCollecton.find(query).toArray()
-            res.send(category)
+            const page = parseInt(req.query.page)
+            const size = parseInt(req.query.size)
+            const jobs = await jobsCollecton.find(query).skip(page*size).limit(size).toArray()
+            const count = await jobsCollecton.estimatedDocumentCount()
+            res.send({count,jobs})
          })
 
 
