@@ -17,66 +17,6 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 // console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run() {
-    try {
-        const userCollection = client.db('carrernetwork').collection('users');
-        const categoriesCollection = client.db('carrernetwork').collection('categories');
-        const jobsCollecton = client.db('carrernetwork').collection('jobs');
-
-        app.post('/user', async (req, res) => {
-            const user = req.body;
-            console.log(user);
-            const result = await userCollection.insertOne(user);
-            res.send(result);
-        });
-       
-        app.post('/jobs', async (req, res) => {
-            const jobInfo = req.body;
-            console.log(jobInfo);
-            const result = await jobsCollecton.insertOne(jobInfo);
-            res.send(result);
-        });
-
-        app.get('/categories', async(req, res)=>{
-            const query = req.body;
-            const result = await categoriesCollection.find(query).toArray()
-            res.send(result)
-        })
-        app.get('/category/:name', async (req, res)=>{
-            const name = req.params.name
-            const query = {category_name : name}
-            const category = await jobsCollecton.find(query).toArray()
-            res.send(category)
-        })
-        
-        //deshbord authraization check
-        
-         app.get("/checkit",async(req,res)=>{
-             const email = req.query.email
-             const query = {email:email}
-             const result = await userCollection.findOne(query)
-             res.send(result)
-         })
-        //  all recruiter find
-        app.get('/recruiter',async(req,res)=>{
-            const query = {role:"recruiter"};
-            const result = await userCollection.find(query).toArray()
-            res.send(result)
-        })
-        
-
-
-    }
-    finally {
-
-    }
-
-}
-
-run().catch(err => console.error(err));
-
-
-
 
 function verifyJWT(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -94,6 +34,98 @@ function verifyJWT(req, res, next) {
         next();
     })
 }
+
+
+
+async function run() {
+    try {
+        const userCollection = client.db('carrernetwork').collection('users');
+        const categoriesCollection = client.db('carrernetwork').collection('categories');
+        const jobsCollecton = client.db('carrernetwork').collection('jobs');
+
+        const verifyAdmin = async (req, res, next) => {
+            const decodedEmail = req.decoded.email;
+            const query = { email: decodedEmail };
+            const user = await userCollection.findOne(query);
+
+            if (user?.role !== 'admin') {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            next();
+        }
+
+        app.get('/users/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email }
+            const user = await usersCollection.findOne(query);
+            res.send({ isAdmin: user?.role === 'admin' });
+        })
+
+
+        app.post('/user', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        });
+
+        app.post('/jobs', async (req, res) => {
+            const jobInfo = req.body;
+            console.log(jobInfo);
+            const result = await jobsCollecton.insertOne(jobInfo);
+            res.send(result);
+        });
+
+        app.get('/categories', async (req, res) => {
+            const query = req.body;
+            const result = await categoriesCollection.find(query).toArray()
+            res.send(result)
+        })
+        app.get('/category/:name', async (req, res) => {
+            const name = req.params.name
+            const query = { category_name: name }
+            const category = await jobsCollecton.find(query).toArray()
+            res.send(category)
+        })
+
+        //deshbord authraization check
+
+        app.get("/checkit", async (req, res) => {
+            const email = req.query.email
+            const query = { email: email }
+            const result = await userCollection.findOne(query)
+            res.send(result)
+        })
+        app.get('/alljobs', async (req, res) => {
+
+            const query = {}
+            const page = parseInt(req.query.page)
+            const size = parseInt(req.query.size)
+            const jobs = await jobsCollecton.find(query).skip(page * size).limit(size).toArray()
+            const count = await jobsCollecton.estimatedDocumentCount()
+            res.send({ count, jobs })
+        })
+        //  all recruiter find
+        app.get('/recruiter',async(req,res)=>{
+            const query = {role:"recruiter"};
+            const result = await userCollection.find(query).toArray()
+            res.send(result)
+        })
+
+
+    }
+    finally {
+
+    }
+
+}
+
+run().catch(err => console.error(err));
+
+
+
+
+
 
 
 
