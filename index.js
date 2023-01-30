@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -105,12 +105,34 @@ async function run() {
             const count = await jobsCollecton.estimatedDocumentCount()
             res.send({ count, jobs })
         })
+
         //  all recruiter find
         app.get('/recruiter',async(req,res)=>{
             const query = {role:"recruiter"};
             const result = await userCollection.find(query).toArray()
             res.send(result)
         })
+
+        // create admin
+        app.put("/addAdmin",async(req,res)=>{
+            const query = req.body
+            const id = {_id:ObjectId(query.id)}
+            const option = {upsert:true}
+            const updateDoc = {
+                $set:{
+                    role:query.role
+                }
+            }
+            const result = await userCollection.updateOne(id,updateDoc,option)
+            res.send(result)
+        })
+
+        // home page features job limitation
+        // app.get("/features",async(req,res)=>{
+        //     const query = {}
+        //     const result = await jobsCollecton.find(query).limit(6).toArray()
+        //     res.send(result)
+        // })
 
 
     }
