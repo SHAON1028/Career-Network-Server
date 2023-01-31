@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -89,15 +89,14 @@ async function run() {
         })
 
         //deshbord authraization check
-
         app.get("/checkit", async (req, res) => {
             const email = req.query.email
             const query = { email: email }
             const result = await userCollection.findOne(query)
             res.send(result)
         })
-        app.get('/alljobs', async (req, res) => {
 
+        app.get('/alljobs', async (req, res) => {
             const query = {}
             const page = parseInt(req.query.page)
             const size = parseInt(req.query.size)
@@ -124,6 +123,14 @@ async function run() {
                 }
             }
             const result = await userCollection.updateOne(id,updateDoc,option)
+            res.send(result)
+        })
+
+        // delete user 
+        app.delete('/deleteUser', async(req,res)=>{
+            const id = req.query.id
+            const query = {_id:ObjectId(id)}
+            const result = await userCollection.deleteOne(query)
             res.send(result)
         })
 
