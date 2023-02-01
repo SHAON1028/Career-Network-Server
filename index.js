@@ -132,19 +132,19 @@ async function run() {
             res.send(result)
         })
 
-        // home page features job limitation
-        // app.get("/features",async(req,res)=>{
-        //     const query = {}
-        //     const result = await jobsCollecton.find(query).limit(6).toArray()
-        //     res.send(result)
-        // })
-
         // all job seeker find 
         app.get('/jobSeeker', async(req,res)=>{
             const query = {role:"seeker"}
             const result = await userCollection.find(query).toArray();
             res.send(result)
         })
+        
+        // home page features job limitation
+        // app.get("/features",async(req,res)=>{
+        //     const query = {}
+        //     const result = await jobsCollecton.find(query).limit(6).toArray()
+        //     res.send(result)
+        // })
 
     }
     finally {
