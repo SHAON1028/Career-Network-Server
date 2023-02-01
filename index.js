@@ -62,16 +62,14 @@ async function run() {
         })
 
 
-        app.post('/user', async (req, res) => {
+        app.post('/user', async (req, res) =>{
             const user = req.body;
-            console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
 
-        app.post('/jobs', async (req, res) => {
+        app.post('/jobs', async (req, res) =>{
             const jobInfo = req.body;
-            console.log(jobInfo);
             const result = await jobsCollecton.insertOne(jobInfo);
             res.send(result);
         });
@@ -91,7 +89,7 @@ async function run() {
         //deshbord authraization check
         app.get("/checkit", async (req, res) => {
             const email = req.query.email
-            const query = { email: email }
+            const query = { email: email}
             const result = await userCollection.findOne(query)
             res.send(result)
         })
@@ -141,6 +139,12 @@ async function run() {
         //     res.send(result)
         // })
 
+        // all job seeker find 
+        app.get('/jobSeeker', async(req,res)=>{
+            const query = {role:"seeker"}
+            const result = await userCollection.find(query).toArray();
+            res.send(result)
+        })
 
     }
     finally {
