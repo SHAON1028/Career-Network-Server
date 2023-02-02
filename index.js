@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -57,22 +57,33 @@ async function run() {
         app.get('/users/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
-            const user = await usersCollection.findOne(query);
+            const user = await userCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
         })
 
 
-        app.post('/user', async (req, res) =>{
+        app.post('/user', async (req, res) => {
             const user = req.body;
+            console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
 
-        app.post('/jobs', async (req, res) =>{
+        app.post('/jobs', async (req, res) => {
             const jobInfo = req.body;
+            console.log(jobInfo);
             const result = await jobsCollecton.insertOne(jobInfo);
             res.send(result);
         });
+
+        app.get('/featurejob', async (req, res) => {
+            const query = {};
+            const mobiles = await mobileCollection.find(query).toArray();
+            const addvertiseMobiles = mobiles.filter(n => n.is_add === true && n.is_sold === false);
+            res.send(addvertiseMobiles);
+
+        });
+
 
         app.get('/categories', async (req, res) => {
             const query = req.body;
@@ -87,14 +98,15 @@ async function run() {
         })
 
         //deshbord authraization check
+
         app.get("/checkit", async (req, res) => {
             const email = req.query.email
-            const query = { email: email}
+            const query = { email: email }
             const result = await userCollection.findOne(query)
             res.send(result)
         })
-
         app.get('/alljobs', async (req, res) => {
+
             const query = {}
             const page = parseInt(req.query.page)
             const size = parseInt(req.query.size)
@@ -103,48 +115,6 @@ async function run() {
             res.send({ count, jobs })
         })
 
-        //  all recruiter find
-        app.get('/recruiter',async(req,res)=>{
-            const query = {role:"recruiter"};
-            const result = await userCollection.find(query).toArray()
-            res.send(result)
-        })
-
-        // create admin
-        app.put("/addAdmin",async(req,res)=>{
-            const query = req.body
-            const id = {_id:ObjectId(query.id)}
-            const option = {upsert:true}
-            const updateDoc = {
-                $set:{
-                    role:query.role
-                }
-            }
-            const result = await userCollection.updateOne(id,updateDoc,option)
-            res.send(result)
-        })
-
-        // delete user 
-        app.delete('/deleteUser', async(req,res)=>{
-            const id = req.query.id
-            const query = {_id:ObjectId(id)}
-            const result = await userCollection.deleteOne(query)
-            res.send(result)
-        })
-
-        // all job seeker find 
-        app.get('/jobSeeker', async(req,res)=>{
-            const query = {role:"seeker"}
-            const result = await userCollection.find(query).toArray();
-            res.send(result)
-        })
-        
-        // home page features job limitation
-        // app.get("/features",async(req,res)=>{
-        //     const query = {}
-        //     const result = await jobsCollecton.find(query).limit(6).toArray()
-        //     res.send(result)
-        // })
 
     }
     finally {
