@@ -57,6 +57,12 @@ async function run() {
              const result = await userCollection.findOne(query)
              res.send(result)
          })
+        //  all recruiter find
+        app.get('/recruiter',async(req,res)=>{
+            const query = {role:"recruiter"};
+            const result = await userCollection.find(query).toArray()
+            res.send(result)
+        })
 
 
     }
