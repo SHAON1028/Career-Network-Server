@@ -4,7 +4,10 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
+
 const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
+const { query } = require('express')
+
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -102,12 +105,23 @@ async function run() {
             res.send({ count, jobs })
         })
 
+
         //  all recruiter find
         app.get('/recruiter',async(req,res)=>{
             const query = {role:"recruiter"};
             const result = await userCollection.find(query).toArray()
             res.send(result)
         })
+         // job details
+        app.get('/alljobs/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const query = {_id:ObjectId(id)}
+
+            const job = await jobsCollecton.findOne(query)
+            res.send(job)
+        })     
+
 
         // create admin
         app.put("/addAdmin",async(req,res)=>{
