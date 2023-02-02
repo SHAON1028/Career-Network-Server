@@ -36,7 +36,6 @@ function verifyJWT(req, res, next) {
 }
 
 
-
 async function run() {
     try {
         const userCollection = client.db('carrernetwork').collection('users');
@@ -116,6 +115,41 @@ async function run() {
         })
 
 
+        //  all admin find
+        app.get("/alladmin", async(req,res)=>{
+            const query = {role:"admin"}
+            const result = await userCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        // admin table remove verify
+        app.patch("/removeverify",async(req,res)=>{
+            const data = req.body
+            const query = {_id:ObjectId(data?.id)}
+            const option ={upsert:true}
+            const updateDoc = {
+                $set:{
+                    verify:data?.verify
+                }
+            }
+            const result = await userCollection.updateOne(query,updateDoc,option)
+            res.send(result)
+        })
+
+        // admin table adding verify
+        app.patch("/addingverify",async(req,res)=>{
+            const data = req.body
+            const query = {_id:ObjectId(data?.id)}
+            const option ={upsert:true}
+            const updateDoc = {
+                $set:{
+                    verify:data?.verify
+                }
+            }
+            const result = await userCollection.updateOne(query,updateDoc,option)
+            res.send(result)
+        })
+
     }
     finally {
 
@@ -124,17 +158,6 @@ async function run() {
 }
 
 run().catch(err => console.error(err));
-
-
-
-
-
-
-
-
-
-
-
 
 
 
