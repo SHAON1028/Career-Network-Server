@@ -79,7 +79,7 @@ async function run() {
         app.get('/featurejob', async (req, res) => {
             const query = {};
             const mobiles = await mobileCollection.find(query).toArray();
-            const addvertiseMobiles = mobiles.filter(n => n.is_add === true && n.is_sold === false);
+            const addvertiseMobiles = mobiles.filter(n => n.is_add === true);
             res.send(addvertiseMobiles);
 
         });
