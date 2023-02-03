@@ -194,6 +194,14 @@ async function run() {
             res.send(result)
         })
 
+        // specific recuriter all job post find
+        app.get("/recuriterjob", async(req,res)=>{
+            const email = req.query.email;
+            const query = await {recruiterEmail:email}
+            const result = await jobsCollecton.find(query).toArray()
+            res.send(result)
+        })
+
     }
     finally {
 
