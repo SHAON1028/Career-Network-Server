@@ -115,6 +115,7 @@ async function run() {
             res.send({ count, jobs })
         })
 
+        // job find by id
         app.get('/alljobs/:id',async (req, res) =>{
             const id = req.params.id;
             const job = {_id : ObjectId(id)}
