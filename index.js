@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -55,11 +55,45 @@ async function run() {
         }
 
         app.post('/user', async (req, res) => {
-            const user = req.body;
+            const user = req.body
             console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
+
+        app.get('/user', async(req,res)=>{
+            const user = req.body
+            const result = await userCollection.find(user).toArray()
+            res.send(result)
+        })
+        app.get('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = {email:email}
+            // console.log(query)
+            const user = await userCollection.findOne(query)
+           res.send(user)
+        })
+
+        app.put('/user/:id', async(req, res)=>{
+            const id = req.params.id
+            const filter = {_id: ObjectId(id)}
+            const user = req.body
+            const option  = {upsert: true}
+            const updateUser = {
+                $set:{
+                name:user.name,
+                email: user.email,
+                img: user.image,
+                address: user.address,
+                phone: user.phone,
+                position:user.position,
+                skill: user.skill,
+                experience: user.experience       
+            }}
+            const result = await userCollection.updateOne(filter, option, updateUser)
+            res.send(result)
+
+        })
 
         app.post('/jobs', async (req, res) => {
             const jobInfo = req.body;
@@ -80,9 +114,9 @@ async function run() {
             res.send(category)
         })
 
-        //deshbord authraization check
+        //dashboard authorization check
 
-        app.get("/checkit", async (req, res) => {
+        app.get("/checkout", async (req, res) => {
             const email = req.query.email
             const query = { email: email }
             const result = await userCollection.findOne(query)
