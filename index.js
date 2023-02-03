@@ -5,9 +5,7 @@ const app = express();
 require('dotenv').config();
 
 
-const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
-const { query } = require('express')
-
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -59,22 +57,33 @@ async function run() {
         app.get('/users/admin/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email }
-            const user = await usersCollection.findOne(query);
+            const user = await userCollection.findOne(query);
             res.send({ isAdmin: user?.role === 'admin' });
         })
 
 
-        app.post('/user', async (req, res) =>{
+        app.post('/user', async (req, res) => {
             const user = req.body;
+            console.log(user);
             const result = await userCollection.insertOne(user);
             res.send(result);
         });
 
-        app.post('/jobs', async (req, res) =>{
+        app.post('/jobs', async (req, res) => {
             const jobInfo = req.body;
+            console.log(jobInfo);
             const result = await jobsCollecton.insertOne(jobInfo);
             res.send(result);
         });
+
+        app.get('/featurejob', async (req, res) => {
+            const query = {};
+            const jobs = await jobsCollecton.find(query).toArray();
+            const addvertisjobs = jobs.filter(n => n.isPaid === true);
+            res.send(addvertisjobs);
+
+        });
+
 
         app.get('/categories', async (req, res) => {
             const query = req.body;
@@ -89,14 +98,15 @@ async function run() {
         })
 
         //deshbord authraization check
+
         app.get("/checkit", async (req, res) => {
             const email = req.query.email
-            const query = { email: email}
+            const query = { email: email }
             const result = await userCollection.findOne(query)
             res.send(result)
         })
-
         app.get('/alljobs', async (req, res) => {
+
             const query = {}
             const page = parseInt(req.query.page)
             const size = parseInt(req.query.size)
@@ -107,51 +117,41 @@ async function run() {
 
 
         //  all recruiter find
-        app.get('/recruiter',async(req,res)=>{
-            const query = {role:"recruiter"};
+        app.get('/recruiter', async (req, res) => {
+            const query = { role: "recruiter" };
             const result = await userCollection.find(query).toArray()
             res.send(result)
         })
-         // job details
-        app.get('/alljobs/:id', async (req, res) => {
-            const id = req.params.id
-            console.log(id)
-            const query = {_id:ObjectId(id)}
-
-            const job = await jobsCollecton.findOne(query)
-            res.send(job)
-        })     
-
 
         // create admin
-        app.put("/addAdmin",async(req,res)=>{
+        app.put("/addAdmin", async (req, res) => {
             const query = req.body
-            const id = {_id:ObjectId(query.id)}
-            const option = {upsert:true}
+            const id = { _id: ObjectId(query.id) }
+            const option = { upsert: true }
             const updateDoc = {
-                $set:{
-                    role:query.role
+                $set: {
+                    role: query.role
                 }
             }
-            const result = await userCollection.updateOne(id,updateDoc,option)
+            const result = await userCollection.updateOne(id, updateDoc, option)
             res.send(result)
         })
 
         // delete user 
-        app.delete('/deleteUser', async(req,res)=>{
+        app.delete('/deleteUser', async (req, res) => {
             const id = req.query.id
-            const query = {_id:ObjectId(id)}
+            const query = { _id: ObjectId(id) }
             const result = await userCollection.deleteOne(query)
             res.send(result)
         })
 
         // all job seeker find 
-        app.get('/jobSeeker', async(req,res)=>{
-            const query = {role:"seeker"}
+        app.get('/jobSeeker', async (req, res) => {
+            const query = { role: "seeker" }
             const result = await userCollection.find(query).toArray();
             res.send(result)
         })
-        
+
         // home page features job limitation
         // app.get("/features",async(req,res)=>{
         //     const query = {}
@@ -160,44 +160,44 @@ async function run() {
         // })
 
         //  all admin find
-        app.get("/alladmin", async(req,res)=>{
-            const query = {role:"admin"}
+        app.get("/alladmin", async (req, res) => {
+            const query = { role: "admin" }
             const result = await userCollection.find(query).toArray()
             res.send(result)
         })
 
         // admin table remove verify
-        app.patch("/removeverify",async(req,res)=>{
+        app.patch("/removeverify", async (req, res) => {
             const data = req.body
-            const query = {_id:ObjectId(data?.id)}
-            const option ={upsert:true}
+            const query = { _id: ObjectId(data?.id) }
+            const option = { upsert: true }
             const updateDoc = {
-                $set:{
-                    verify:data?.verify
+                $set: {
+                    verify: data?.verify
                 }
             }
-            const result = await userCollection.updateOne(query,updateDoc,option)
+            const result = await userCollection.updateOne(query, updateDoc, option)
             res.send(result)
         })
 
         // admin table adding verify
-        app.patch("/addingverify",async(req,res)=>{
+        app.patch("/addingverify", async (req, res) => {
             const data = req.body
-            const query = {_id:ObjectId(data?.id)}
-            const option ={upsert:true}
+            const query = { _id: ObjectId(data?.id) }
+            const option = { upsert: true }
             const updateDoc = {
-                $set:{
-                    verify:data?.verify
+                $set: {
+                    verify: data?.verify
                 }
             }
-            const result = await userCollection.updateOne(query,updateDoc,option)
+            const result = await userCollection.updateOne(query, updateDoc, option)
             res.send(result)
         })
 
         // specific recuriter all job post find
-        app.get("/recuriterjob", async(req,res)=>{
+        app.get("/recuriterjob", async (req, res) => {
             const email = req.query.email;
-            const query = await {recruiterEmail:email}
+            const query = await { recruiterEmail: email }
             const result = await jobsCollecton.find(query).toArray()
             res.send(result)
         })
