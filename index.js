@@ -128,7 +128,7 @@ async function run() {
             const query = { role: "recruiter" };
             const result = await userCollection.find(query).toArray()
             res.send(result)
-        })
+        }) 
 
         // create admin
         app.put("/addAdmin", async (req, res) => {
@@ -294,6 +294,16 @@ async function run() {
             const result = await jobsCollecton.find(query).toArray()
             res.send(result)
         })
+
+         // job details
+        app.get('/alljobs/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const query = {_id:ObjectId(id)}
+
+            const job = await jobsCollecton.findOne(query)
+            res.send(job)
+        })     
 
     }
     finally {
