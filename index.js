@@ -4,8 +4,12 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
+<<<<<<< HEAD
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+=======
+const { MongoClient, ServerApiVersion, ObjectId, } = require('mongodb');
+>>>>>>> noman
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -42,6 +46,7 @@ async function run() {
         const userCollection = client.db('carrernetwork').collection('users');
         const categoriesCollection = client.db('carrernetwork').collection('categories');
         const jobsCollecton = client.db('carrernetwork').collection('jobs');
+        const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
         const verifyAdmin = async (req, res, next) => {
             const decodedEmail = req.decoded.email;
@@ -98,15 +103,14 @@ async function run() {
         })
 
         //deshbord authraization check
-
         app.get("/checkit", async (req, res) => {
             const email = req.query.email
             const query = { email: email }
             const result = await userCollection.findOne(query)
             res.send(result)
         })
-        app.get('/alljobs', async (req, res) => {
 
+        app.get('/alljobs', async (req, res) => {
             const query = {}
             const page = parseInt(req.query.page)
             const size = parseInt(req.query.size)
@@ -173,20 +177,6 @@ async function run() {
             res.send(result)
         })
 
-        // admin table remove verify
-        app.patch("/removeverify", async (req, res) => {
-            const data = req.body
-            const query = { _id: ObjectId(data?.id) }
-            const option = { upsert: true }
-            const updateDoc = {
-                $set: {
-                    verify: data?.verify
-                }
-            }
-            const result = await userCollection.updateOne(query, updateDoc, option)
-            res.send(result)
-        })
-
         // admin table adding verify
         app.patch("/addingverify", async (req, res) => {
             const data = req.body
@@ -206,70 +196,6 @@ async function run() {
             const email = req.query.email;
             const query = await { recruiterEmail: email }
             const result = await jobsCollecton.find(query).toArray()
-            res.send(result)
-        })
-
-        //  all recruiter find
-        app.get('/recruiter', async (req, res) => {
-            const query = { role: "recruiter" };
-            const result = await userCollection.find(query).toArray()
-            res.send(result)
-        })
-
-        // create admin
-        app.put("/addAdmin", async (req, res) => {
-            const query = req.body
-            const id = { _id: ObjectId(query.id) }
-            const option = { upsert: true }
-            const updateDoc = {
-                $set: {
-                    role: query.role
-                }
-            }
-            const result = await userCollection.updateOne(id, updateDoc, option)
-            res.send(result)
-        })
-
-        // delete user 
-        app.delete('/deleteUser', async (req, res) => {
-            const id = req.query.id
-            const query = { _id: ObjectId(id) }
-            const result = await userCollection.deleteOne(query)
-            res.send(result)
-        })
-
-        // all job seeker find 
-        app.get('/jobSeeker', async (req, res) => {
-            const query = { role: "seeker" }
-            const result = await userCollection.find(query).toArray();
-            res.send(result)
-        })
-
-        // home page features job limitation
-        // app.get("/features",async(req,res)=>{
-        //     const query = {}
-        //     const result = await jobsCollecton.find(query).limit(6).toArray()
-        //     res.send(result)
-        // })
-
-        //  all admin find
-        app.get("/alladmin", async (req, res) => {
-            const query = { role: "admin" }
-            const result = await userCollection.find(query).toArray()
-            res.send(result)
-        })
-
-        // admin table remove verify
-        app.patch("/removeverify", async (req, res) => {
-            const data = req.body
-            const query = { _id: ObjectId(data?.id) }
-            const option = { upsert: true }
-            const updateDoc = {
-                $set: {
-                    verify: data?.verify
-                }
-            }
-            const result = await userCollection.updateOne(query, updateDoc, option)
             res.send(result)
         })
 
@@ -304,6 +230,37 @@ async function run() {
             const job = await jobsCollecton.findOne(query)
             res.send(job)
         })     
+
+        // all admin find 
+        app.get("/alladmin",async(req,res)=>{
+            const query = {role:"admin"}
+            const result = await userCollection.find(query).toArray()
+            res.send(result)
+        }) 
+
+        // add resume or cv
+        app.put("/addresume",async(req,res)=>{
+            const query = req.body
+            const email = {email:query.email}
+            const option = {upsert:true}
+            const updateDoc = {
+                $set:{
+                    resume:query.resume
+                }
+            }
+            const result = await UserDetails.updateOne(email,updateDoc,option)
+            res.send(result)
+        })
+
+        // resume data find 
+        app.get("/resumefind",async(req,res)=>{
+            const query = req.query.email
+            const email = {email:query}
+            console.log(email)
+            const result = await UserDetails.findOne(email)
+            console.log(result)
+            res.send(result)
+        })
 
     }
     finally {
