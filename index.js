@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId, } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -42,6 +42,7 @@ async function run() {
         const userCollection = client.db('carrernetwork').collection('users');
         const categoriesCollection = client.db('carrernetwork').collection('categories');
         const jobsCollecton = client.db('carrernetwork').collection('jobs');
+        const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
         const verifyAdmin = async (req, res, next) => {
             const decodedEmail = req.decoded.email;
@@ -145,6 +146,37 @@ async function run() {
         //     const result = await jobsCollecton.find(query).limit(6).toArray()
         //     res.send(result)
         // })
+
+        // all admin find 
+        app.get("/alladmin",async(req,res)=>{
+            const query = {role:"admin"}
+            const result = await userCollection.find(query).toArray()
+            res.send(result)
+        }) 
+
+        // add resume or cv
+        app.put("/addresume",async(req,res)=>{
+            const query = req.body
+            const email = {email:query.email}
+            const option = {upsert:true}
+            const updateDoc = {
+                $set:{
+                    resume:query.resume
+                }
+            }
+            const result = await UserDetails.updateOne(email,updateDoc,option)
+            res.send(result)
+        })
+
+        // resume data find 
+        app.get("/resumefind",async(req,res)=>{
+            const query = req.query.email
+            const email = {email:query}
+            console.log(email)
+            const result = await UserDetails.findOne(email)
+            console.log(result)
+            res.send(result)
+        })
 
     }
     finally {
