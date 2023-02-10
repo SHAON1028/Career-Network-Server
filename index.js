@@ -3,6 +3,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -86,6 +88,13 @@ async function run() {
 
         });
 
+        app.get('/addjobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const job = await jobsCollecton.findOne(query);
+            res.send(job);
+        })
+
 
         app.get('/categories', async (req, res) => {
             const query = req.body;
@@ -122,7 +131,7 @@ async function run() {
         app.post('/payments', async (req, res) => {
             const payment = req.body;
             const result = await paymentsCollection.insertOne(payment);
-            const id = payment.bookingId
+            const id = payment._id
             const filter = { _id: ObjectId(id) }
             const updatedDoc = {
                 $set: {
@@ -143,7 +152,7 @@ async function run() {
                     isPaid: true
                 }
             }
-            const result = await mobileCollection.updateOne(filter, updatedDoc, options);
+            const result = await jobsCollecton.updateOne(filter, updatedDoc, options);
             res.send(result);
         });
 
