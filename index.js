@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 const app = express();
 require("dotenv").config();
 
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -38,6 +40,7 @@ function verifyJWT(req, res, next) {
 }
 
 async function run() {
+
   try {
     const userCollection = client.db("carrernetwork").collection("users");
     const categoriesCollection = client
@@ -51,6 +54,10 @@ async function run() {
       .db("carrernetwork")
       .collection("savedJob");
     const notificationsCollection = client.db("carrernetwork").collection("notifications");
+    
+    const UserDetails = client.db("carrernetwork").collection("seekerdetails")
+
+    
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
       const query = { email: decodedEmail };
@@ -366,6 +373,7 @@ async function run() {
       res.send(findJob);
     })
 
+
     // save Notifications
     app.post('/notifications',async(req, res) => {
         const notification = req.body
@@ -401,6 +409,30 @@ async function run() {
     
         res.send(result)
     })
+    
+         // add resume or cv
+        app.put("/addresume",async(req,res)=>{
+            const query = req.body
+            const email = {email:query.email}
+            const option = {upsert:true}
+            const updateDoc = {
+                $set:{
+                    resume:query.resume
+                }
+            }
+            const result = await UserDetails.updateOne(email,updateDoc,option)
+            res.send(result)
+        })
+
+        // resume data find 
+        app.get("/resumefind",async(req,res)=>{
+            const query = req.query.email
+            const email = {email:query}
+            console.log(email)
+            const result = await UserDetails.findOne(email)
+            console.log(result)
+            res.send(result)
+        })
   } finally {
   }
 }
