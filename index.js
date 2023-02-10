@@ -406,7 +406,6 @@ async function run() {
     // saved jobs
     app.post("/savedjob", async (req, res) => {
       const job = req.body;
-      // console.log(job)
       const savedjob = await savedJobCollection.insertOne(job);
       res.send(savedjob);
     });
@@ -492,6 +491,7 @@ async function run() {
             const email = {email:query}
             console.log(email)
             const result = await UserDetails.findOne(email)
+            console.log(result)
             res.send(result)
         })
 
