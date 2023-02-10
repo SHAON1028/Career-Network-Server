@@ -253,7 +253,6 @@ async function run() {
             const email = {email:query}
             console.log(email)
             const result = await UserDetails.findOne(email)
-            console.log(result)
             res.send(result)
         })
 
