@@ -406,7 +406,6 @@ async function run() {
     // saved jobs
     app.post("/savedjob", async (req, res) => {
       const job = req.body;
-      // console.log(job)
       const savedjob = await savedJobCollection.insertOne(job);
       res.send(savedjob);
     });
