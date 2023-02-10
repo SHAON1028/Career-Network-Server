@@ -2,7 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const app = express();
-require("dotenv").config();
+
+require('dotenv').config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -41,6 +45,7 @@ function verifyJWT(req, res, next) {
 
 async function run() {
 
+
   try {
     const userCollection = client.db("carrernetwork").collection("users");
     const categoriesCollection = client
@@ -57,6 +62,7 @@ async function run() {
     
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
+    const paymentsCollection = client.db('mobileResale').collection('payments');
     
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -89,7 +95,13 @@ async function run() {
       const result = await jobsCollecton.insertOne(jobInfo);
       res.send(result);
     });
-
+    
+        app.get('/addjobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const job = await jobsCollecton.findOne(query);
+            res.send(job);
+        })
     app.get("/featurejob", async (req, res) => {
       const query = {};
       const jobs = await jobsCollecton.find(query).toArray();
@@ -108,6 +120,56 @@ async function run() {
       const category = await jobsCollecton.find(query).toArray();
       res.send(category);
     });
+
+      //.............payment.............
+
+        app.post('/create-payment-intent', async (req, res) => {
+            const booking = req.body;
+            const price = booking.price;
+            const amount = price * 100;
+
+            const paymentIntent = await stripe.paymentIntents.create({
+                currency: 'usd',
+                amount: amount,
+                "payment_method_types": [
+                    "card"
+                ]
+            });
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
+
+        app.post('/payments', async (req, res) => {
+            const payment = req.body;
+            const result = await paymentsCollection.insertOne(payment);
+            const id = payment._id
+            const filter = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    paid: true,
+                    transactionId: payment.transactionId
+                }
+            }
+            const updatedResult = await paymentsCollection.updateOne(filter, updatedDoc)
+            res.send(result);
+        })
+
+        app.put('/addjobs/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    isPaid: true
+                }
+            }
+            const result = await jobsCollecton.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
+
+
 
     //deshbord authraization check
 
@@ -433,8 +495,10 @@ async function run() {
             console.log(result)
             res.send(result)
         })
+
   } finally {
   }
+
 }
 
 run().catch((err) => console.error(err));
