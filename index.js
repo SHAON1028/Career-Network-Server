@@ -59,11 +59,11 @@ async function run() {
       .db("carrernetwork")
       .collection("savedJob");
     const notificationsCollection = client.db("carrernetwork").collection("notifications");
-    
+
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
     const paymentsCollection = client.db('mobileResale').collection('payments');
-    
+
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
       const query = { email: decodedEmail };
@@ -74,6 +74,18 @@ async function run() {
       }
       next();
     };
+
+
+    app.get('/jwt', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const user = await userCollection.findOne(query);
+      if (user) {
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '7d' })
+        return res.send({ accessToken: token });
+      }
+      res.status(403).send({ accessToken: '' })
+    });
 
     app.get("/users/admin/:email", async (req, res) => {
       const email = req.params.email;
@@ -95,13 +107,13 @@ async function run() {
       const result = await jobsCollecton.insertOne(jobInfo);
       res.send(result);
     });
-    
-        app.get('/addjobs/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const job = await jobsCollecton.findOne(query);
-            res.send(job);
-        })
+
+    app.get('/addjobs/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const job = await jobsCollecton.findOne(query);
+      res.send(job);
+    })
     app.get("/featurejob", async (req, res) => {
       const query = {};
       const jobs = await jobsCollecton.find(query).toArray();
@@ -121,53 +133,53 @@ async function run() {
       res.send(category);
     });
 
-      //.............payment.............
+    //.............payment.............
 
-        app.post('/create-payment-intent', async (req, res) => {
-            const booking = req.body;
-            const price = booking.price;
-            const amount = price * 100;
+    app.post('/create-payment-intent', async (req, res) => {
+      const booking = req.body;
+      const price = booking.price;
+      const amount = price * 100;
 
-            const paymentIntent = await stripe.paymentIntents.create({
-                currency: 'usd',
-                amount: amount,
-                "payment_method_types": [
-                    "card"
-                ]
-            });
-            res.send({
-                clientSecret: paymentIntent.client_secret,
-            });
-        });
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: 'usd',
+        amount: amount,
+        "payment_method_types": [
+          "card"
+        ]
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    });
 
 
-        app.post('/payments', async (req, res) => {
-            const payment = req.body;
-            const result = await paymentsCollection.insertOne(payment);
-            const id = payment._id
-            const filter = { _id: ObjectId(id) }
-            const updatedDoc = {
-                $set: {
-                    paid: true,
-                    transactionId: payment.transactionId
-                }
-            }
-            const updatedResult = await paymentsCollection.updateOne(filter, updatedDoc)
-            res.send(result);
-        })
+    app.post('/payments', async (req, res) => {
+      const payment = req.body;
+      const result = await paymentsCollection.insertOne(payment);
+      const id = payment._id
+      const filter = { _id: ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId
+        }
+      }
+      const updatedResult = await paymentsCollection.updateOne(filter, updatedDoc)
+      res.send(result);
+    })
 
-        app.put('/addjobs/:id', verifyJWT, async (req, res) => {
-            const id = req.params.id;
-            const filter = { _id: ObjectId(id) }
-            const options = { upsert: true };
-            const updatedDoc = {
-                $set: {
-                    isPaid: true
-                }
-            }
-            const result = await jobsCollecton.updateOne(filter, updatedDoc, options);
-            res.send(result);
-        });
+    app.put('/addjobs/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) }
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          isPaid: true
+        }
+      }
+      const result = await jobsCollecton.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    });
 
 
 
@@ -393,10 +405,10 @@ async function run() {
       const email = req.query.email;
       const idOfJob = req.query._id;
       const query = { applicant_email: email, jobId: idOfJob };
-    //   console.log(email);
-    //   console.log(idOfJob);
+      //   console.log(email);
+      //   console.log(idOfJob);
       const findJob = await appliedJobCollection.findOne(query);
-    //   console.log(findJob);
+      //   console.log(findJob);
       if (findJob) {
         res.send(true);
       } else {
@@ -414,9 +426,9 @@ async function run() {
       const email = req.query.email;
       const idOfJob = req.query._id;
       const query = { applicant_email: email, jobId: idOfJob };
-     
+
       const findJob = await savedJobCollection.findOne(query);
-      
+
       if (findJob) {
         res.send(true);
       } else {
@@ -425,10 +437,10 @@ async function run() {
     });
 
     // unsaveJob
-    app.delete('/savedjob',async(req,res)=>{
-        const email = req.query.email;
+    app.delete('/savedjob', async (req, res) => {
+      const email = req.query.email;
       const idOfJob = req.query._id;
-    //   console.log(email,idOfJob);
+      //   console.log(email,idOfJob);
       const query = { applicant_email: email, jobId: idOfJob };
       const findJob = await savedJobCollection.deleteOne(query);
       res.send(findJob);
@@ -436,64 +448,64 @@ async function run() {
 
 
     // save Notifications
-    app.post('/notifications',async(req, res) => {
-        const notification = req.body
-        const query= {}
-        const result = await notificationsCollection.insertOne(notification)
-        res.send(result)
+    app.post('/notifications', async (req, res) => {
+      const notification = req.body
+      const query = {}
+      const result = await notificationsCollection.insertOne(notification)
+      res.send(result)
     })
-    app.get('/notifications',async(req, res) => {
-        const email = req.query.email
-        const query= {companyEmail:email}
-        const result = await notificationsCollection.find(query).sort({createdAt:-1}).toArray()
-        res.send(result)
+    app.get('/notifications', async (req, res) => {
+      const email = req.query.email
+      const query = { companyEmail: email }
+      const result = await notificationsCollection.find(query).sort({ createdAt: -1 }).toArray()
+      res.send(result)
     })
-    app.get('/notificationCount',async(req, res) => {
-        const email = req.query.email
-        const stat = req.query.status
-        const query= {companyEmail:email,status:stat}
-        const result = await notificationsCollection.find(query).toArray()
-    
-        res.send(result)
-    })
-    app.put('/notifications',async(req, res) => {
-        const email = req.query.email
-        const statData = req.body
-        // console.log(email,statData)
-        const filter= {companyEmail:email}
-        const updateDoc = {
-            $set: {
-                status: statData.status
-            },
-          };
-        const result = await notificationsCollection.updateMany(filter,updateDoc)
-    
-        res.send(result)
-    })
-    
-         // add resume or cv
-        app.put("/addresume",async(req,res)=>{
-            const query = req.body
-            const email = {email:query.email}
-            const option = {upsert:true}
-            const updateDoc = {
-                $set:{
-                    resume:query.resume
-                }
-            }
-            const result = await UserDetails.updateOne(email,updateDoc,option)
-            res.send(result)
-        })
+    app.get('/notificationCount', async (req, res) => {
+      const email = req.query.email
+      const stat = req.query.status
+      const query = { companyEmail: email, status: stat }
+      const result = await notificationsCollection.find(query).toArray()
 
-        // resume data find 
-        app.get("/resumefind",async(req,res)=>{
-            const query = req.query.email
-            const email = {email:query}
-            console.log(email)
-            const result = await UserDetails.findOne(email)
-            console.log(result)
-            res.send(result)
-        })
+      res.send(result)
+    })
+    app.put('/notifications', async (req, res) => {
+      const email = req.query.email
+      const statData = req.body
+      // console.log(email,statData)
+      const filter = { companyEmail: email }
+      const updateDoc = {
+        $set: {
+          status: statData.status
+        },
+      };
+      const result = await notificationsCollection.updateMany(filter, updateDoc)
+
+      res.send(result)
+    })
+
+    // add resume or cv
+    app.put("/addresume", async (req, res) => {
+      const query = req.body
+      const email = { email: query.email }
+      const option = { upsert: true }
+      const updateDoc = {
+        $set: {
+          resume: query.resume
+        }
+      }
+      const result = await UserDetails.updateOne(email, updateDoc, option)
+      res.send(result)
+    })
+
+    // resume data find 
+    app.get("/resumefind", async (req, res) => {
+      const query = req.query.email
+      const email = { email: query }
+      console.log(email)
+      const result = await UserDetails.findOne(email)
+      console.log(result)
+      res.send(result)
+    })
 
   } finally {
   }
