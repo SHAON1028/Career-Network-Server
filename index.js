@@ -192,16 +192,25 @@ async function run() {
       res.send(result);
     });
     app.get("/alljobs", async (req, res) => {
-      const query = {};
-      const page = parseInt(req.query.page);
-      const size = parseInt(req.query.size);
+      let query = {};
+      const {keyword,location,category} = req.query
+      console.log(keyword,location,category)
+    if (keyword) {
+      query.job_title = { $regex: keyword, $options: "i" };
+    }
+    if (location) {
+      query.location = { $regex: location, $options: "i" };
+    }
+    if (category) {
+      query.category_name = { $regex: category, $options: "i" };
+    }
+    
       const jobs = await jobsCollecton
-        .find(query)
-        .skip(page * size)
-        .limit(size)
+        .find(query) 
         .toArray();
-      const count = await jobsCollecton.estimatedDocumentCount();
-      res.send({ count, jobs });
+    
+      res.send( jobs );
+      console.log(jobs.length)
     });
 
     // job find by id
