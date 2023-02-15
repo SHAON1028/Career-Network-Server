@@ -63,6 +63,8 @@ async function run() {
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
     const paymentsCollection = client.db('mobileResale').collection('payments');
+    
+    const articleCollection= client.db('carrernetwork').collection('articles')
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -513,6 +515,17 @@ async function run() {
       console.log(email)
       const result = await UserDetails.findOne(email)
       console.log(result)
+      res.send(result)
+    })
+    // post article
+    app.post('/articles',async(req,res)=>{
+      const article = req.body;
+      const result = await articleCollection.insertOne(article)
+      res.send(result)
+    })
+    app.get('/articles',async(req,res)=>{
+      const query= {};
+      const result = await articleCollection.find(query).toArray()
       res.send(result)
     })
 
