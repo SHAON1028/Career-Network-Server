@@ -108,6 +108,14 @@ async function run() {
       res.send(result);
     });
 
+
+    app.delete('/deletejob/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await jobsCollecton.deleteOne(query);
+      res.send(result);
+    })
+
     app.get('/addjobs/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -137,7 +145,7 @@ async function run() {
 
     app.post('/create-payment-intent', async (req, res) => {
       const booking = req.body;
-      const price = booking.price;
+      const price = booking.value;
       const amount = price * 100;
 
       const paymentIntent = await stripe.paymentIntents.create({
