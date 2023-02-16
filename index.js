@@ -52,9 +52,7 @@ async function run() {
       .db("carrernetwork")
       .collection("categories");
     const jobsCollecton = client.db("carrernetwork").collection("jobs");
-    const appliedJobCollection = client
-      .db("carrernetwork")
-      .collection("appliedJob");
+    const appliedJobCollection = client.db("carrernetwork").collection("appliedJob");
     const savedJobCollection = client
       .db("carrernetwork")
       .collection("savedJob");
@@ -63,6 +61,8 @@ async function run() {
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
     const paymentsCollection = client.db('mobileResale').collection('payments');
+
+    const articleCollection = client.db('carrernetwork').collection('articles')
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -108,16 +108,47 @@ async function run() {
       res.send(result);
     });
 
+    app.delete('/deletejob/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await jobsCollecton.deleteOne(query);
+      res.send(result);
+    })
+
+    app.delete('/deleteApplicant/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await appliedJobCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    app.get("/applieddetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { jobId: id };
+      const result = await appliedJobCollection.find(query).toArray();;
+      res.send(result);
+    });
+
+
+
     app.get('/addjobs/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const job = await jobsCollecton.findOne(query);
       res.send(job);
+  })
+    
+    app.get('/addjobs/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const job = await jobsCollecton.findOne(query);
+        res.send(job);
     })
     app.get("/featurejob", async (req, res) => {
       const query = {};
       const jobs = await jobsCollecton.find(query).toArray();
-      const addvertisjobs = jobs.filter((n) => n.isPaid === true);
+      let addvertisjobs = jobs.filter((n) => n.isPaid === true);
+      addvertisjobs.length = 6
       res.send(addvertisjobs);
     });
 
@@ -137,7 +168,7 @@ async function run() {
 
     app.post('/create-payment-intent', async (req, res) => {
       const booking = req.body;
-      const price = booking.price;
+      const price = booking.value;
       const amount = price * 100;
 
       const paymentIntent = await stripe.paymentIntents.create({
@@ -193,23 +224,23 @@ async function run() {
     });
     app.get("/alljobs", async (req, res) => {
       let query = {};
-      const {keyword,location,category} = req.query
-      console.log(keyword,location,category)
-    if (keyword) {
-      query.job_title = { $regex: keyword, $options: "i" };
-    }
-    if (location) {
-      query.location = { $regex: location, $options: "i" };
-    }
-    if (category) {
-      query.category_name = { $regex: category, $options: "i" };
-    }
-    
+      const { keyword, location, category } = req.query
+      console.log(keyword, location, category)
+      if (keyword) {
+        query.job_title = { $regex: keyword, $options: "i" };
+      }
+      if (location) {
+        query.location = { $regex: location, $options: "i" };
+      }
+      if (category) {
+        query.category_name = { $regex: category, $options: "i" };
+      }
+
       const jobs = await jobsCollecton
-        .find(query) 
+        .find(query)
         .toArray();
-    
-      res.send( jobs );
+
+      res.send(jobs);
       console.log(jobs.length)
     });
 
@@ -221,13 +252,6 @@ async function run() {
       res.send(result);
     });
 
-    //  all recruiter find
-    app.get("/recruiter", async (req, res) => {
-      const query = { role: "recruiter" };
-      const result = await userCollection.find(query).toArray();
-      res.send(result);
-    });
-
     // create admin
     app.put("/addAdmin", async (req, res) => {
       const query = req.body;
@@ -299,14 +323,6 @@ async function run() {
       res.send(result);
     });
 
-    // specific recuriter all job post find
-    app.get("/recuriterjob", async (req, res) => {
-      const email = req.query.email;
-      const query = await { recruiterEmail: email };
-      const result = await jobsCollecton.find(query).toArray();
-      res.send(result);
-    });
-
     //  all recruiter find
     app.get("/recruiter", async (req, res) => {
       const query = { role: "recruiter" };
@@ -333,55 +349,6 @@ async function run() {
       const id = req.query.id;
       const query = { _id: ObjectId(id) };
       const result = await userCollection.deleteOne(query);
-      res.send(result);
-    });
-
-    // all job seeker find
-    app.get("/jobSeeker", async (req, res) => {
-      const query = { role: "seeker" };
-      const result = await userCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    // home page features job limitation
-    // app.get("/features",async(req,res)=>{
-    //     const query = {}
-    //     const result = await jobsCollecton.find(query).limit(6).toArray()
-    //     res.send(result)
-    // })
-
-    //  all admin find
-    app.get("/alladmin", async (req, res) => {
-      const query = { role: "admin" };
-      const result = await userCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    // admin table remove verify
-    app.patch("/removeverify", async (req, res) => {
-      const data = req.body;
-      const query = { _id: ObjectId(data?.id) };
-      const option = { upsert: true };
-      const updateDoc = {
-        $set: {
-          verify: data?.verify,
-        },
-      };
-      const result = await userCollection.updateOne(query, updateDoc, option);
-      res.send(result);
-    });
-
-    // admin table adding verify
-    app.patch("/addingverify", async (req, res) => {
-      const data = req.body;
-      const query = { _id: ObjectId(data?.id) };
-      const option = { upsert: true };
-      const updateDoc = {
-        $set: {
-          verify: data?.verify,
-        },
-      };
-      const result = await userCollection.updateOne(query, updateDoc, option);
       res.send(result);
     });
 
@@ -505,18 +472,35 @@ async function run() {
       const result = await UserDetails.updateOne(email, updateDoc, option)
       res.send(result)
     })
-
-    // resume data find 
-    app.get("/resumefind", async (req, res) => {
-      const query = req.query.email
-      const email = { email: query }
-      console.log(email)
-      const result = await UserDetails.findOne(email)
-      console.log(result)
+    
+    // post article
+    app.post('/articles', async (req, res) => {
+      const article = req.body;
+      const result = await articleCollection.insertOne(article)
       res.send(result)
     })
 
-  } finally {
+    app.get('/articles', async (req, res) => {
+      const query = {};
+      const result = await articleCollection.find(query).toArray()
+      res.send(result)
+    })
+
+    // resume data find 
+    app.get("/resumefind",async(req,res)=>{
+        const query = req.query.email
+        const email = {email:query}
+        const result = await UserDetails.findOne(email)
+        res.send(result)
+    })
+    //home page blog collection
+    app.get("/collectartical",async(req,res)=>{
+        const query = {}
+        const result = await articleCollection.find(query).limit(9).toArray()
+        res.send(result)
+    })
+  }
+  finally {
   }
 
 }
