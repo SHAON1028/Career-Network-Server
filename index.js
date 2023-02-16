@@ -63,8 +63,8 @@ async function run() {
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
     const paymentsCollection = client.db('mobileResale').collection('payments');
-    
-    const articleCollection= client.db('carrernetwork').collection('articles')
+
+    const articleCollection = client.db('carrernetwork').collection('articles')
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -117,6 +117,22 @@ async function run() {
       const result = await jobsCollecton.deleteOne(query);
       res.send(result);
     })
+
+    app.delete('/deleteApplicant/:id', verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await appliedJobCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    app.get("/applieddetails/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { jobId: id };
+      const result = await appliedJobCollection.find(query).toArray();;
+      res.send(result);
+    });
+
+
 
     app.get('/addjobs/:id', async (req, res) => {
       const id = req.params.id;
@@ -203,23 +219,23 @@ async function run() {
     });
     app.get("/alljobs", async (req, res) => {
       let query = {};
-      const {keyword,location,category} = req.query
-      console.log(keyword,location,category)
-    if (keyword) {
-      query.job_title = { $regex: keyword, $options: "i" };
-    }
-    if (location) {
-      query.location = { $regex: location, $options: "i" };
-    }
-    if (category) {
-      query.category_name = { $regex: category, $options: "i" };
-    }
-    
+      const { keyword, location, category } = req.query
+      console.log(keyword, location, category)
+      if (keyword) {
+        query.job_title = { $regex: keyword, $options: "i" };
+      }
+      if (location) {
+        query.location = { $regex: location, $options: "i" };
+      }
+      if (category) {
+        query.category_name = { $regex: category, $options: "i" };
+      }
+
       const jobs = await jobsCollecton
-        .find(query) 
+        .find(query)
         .toArray();
-    
-      res.send( jobs );
+
+      res.send(jobs);
       console.log(jobs.length)
     });
 
@@ -526,13 +542,13 @@ async function run() {
       res.send(result)
     })
     // post article
-    app.post('/articles',async(req,res)=>{
+    app.post('/articles', async (req, res) => {
       const article = req.body;
       const result = await articleCollection.insertOne(article)
       res.send(result)
     })
-    app.get('/articles',async(req,res)=>{
-      const query= {};
+    app.get('/articles', async (req, res) => {
+      const query = {};
       const result = await articleCollection.find(query).toArray()
       res.send(result)
     })
