@@ -45,7 +45,6 @@ function verifyJWT(req, res, next) {
 
 async function run() {
 
-
   try {
     const userCollection = client.db("carrernetwork").collection("users");
     const categoriesCollection = client
@@ -500,7 +499,8 @@ async function run() {
         res.send(result)
     })
   }
-  finally {}
+  finally {
+}
 
 run().catch((err) => console.error(err));
 
@@ -510,4 +510,4 @@ app.get("/", (req, res) => {
 
 app.listen(port, (req, res) => {
   console.log(`Server is running on ${port}`);
-});
+})}
