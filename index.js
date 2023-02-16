@@ -52,9 +52,7 @@ async function run() {
       .db("carrernetwork")
       .collection("categories");
     const jobsCollecton = client.db("carrernetwork").collection("jobs");
-    const appliedJobCollection = client
-      .db("carrernetwork")
-      .collection("appliedJob");
+    const appliedJobCollection = client.db("carrernetwork").collection("appliedJob");
     const savedJobCollection = client
       .db("carrernetwork")
       .collection("savedJob");
@@ -63,6 +61,7 @@ async function run() {
     const UserDetails = client.db("carrernetwork").collection("seekerdetails")
 
     const paymentsCollection = client.db('mobileResale').collection('payments');
+    const articalCollection = client.db("carrernetwork").collection("articles")
     
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -105,7 +104,8 @@ async function run() {
     app.get("/featurejob", async (req, res) => {
       const query = {};
       const jobs = await jobsCollecton.find(query).toArray();
-      const addvertisjobs = jobs.filter((n) => n.isPaid === true);
+      let addvertisjobs = jobs.filter((n) => n.isPaid === true);
+      addvertisjobs.length = 6
       res.send(addvertisjobs);
     });
 
@@ -426,6 +426,12 @@ async function run() {
             const query = req.query.email
             const email = {email:query}
             const result = await UserDetails.findOne(email)
+            res.send(result)
+        })
+
+        app.get("/collectartical",async(req,res)=>{
+            const query = {}
+            const result = await articalCollection.find(query).limit(9).toArray()
             res.send(result)
         })
 
