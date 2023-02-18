@@ -63,6 +63,7 @@ async function run() {
     const paymentsCollection = client.db('mobileResale').collection('payments');
 
     const articleCollection = client.db('carrernetwork').collection('articles')
+    const testimonialCollection = client.db("carrernetwork").collection("testimonial")
 
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
@@ -498,6 +499,11 @@ async function run() {
         const query = {}
         const result = await articleCollection.find(query).limit(9).toArray()
         res.send(result)
+    })
+    app.get("/teamdetails",async(req,res)=>{
+      const query = {}
+      const result = await testimonialCollection.find(query).toArray()
+      res.send(result)
     })
   }
   finally {
