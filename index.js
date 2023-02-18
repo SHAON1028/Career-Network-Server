@@ -500,7 +500,7 @@ async function run() {
         const result = await articleCollection.find(query).limit(9).toArray()
         res.send(result)
     })
-    app.get("/teamdetails",async(req,res)=>{
+    app.get("/teamreview",async(req,res)=>{
       const query = {}
       const result = await testimonialCollection.find(query).toArray()
       res.send(result)
