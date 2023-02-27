@@ -64,7 +64,7 @@ async function run() {
 
     const articleCollection = client.db('carrernetwork').collection('articles')
     const testimonialCollection = client.db("carrernetwork").collection("testimonial")
-
+    const candidateProfileCollection = client.db('carrernetwork').collection('candidate_profile')
     const verifyAdmin = async (req, res, next) => {
       const decodedEmail = req.decoded.email;
       const query = { email: decodedEmail };
@@ -505,6 +505,16 @@ async function run() {
       const result = await testimonialCollection.find(query).toArray()
       res.send(result)
     })
+
+    // employee dashboard Routes 
+    // profile
+    app.post("/candidateprofile",async(req,res)=>{
+      const profile = req.body;
+      const result = await candidateProfileCollection.insertOne(profile);
+      res.send(result);
+    })
+
+    // employee dashboard Routes end
   }
   finally {
   }
