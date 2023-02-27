@@ -513,7 +513,35 @@ async function run() {
       const result = await candidateProfileCollection.insertOne(profile);
       res.send(result);
     })
-
+    app.get("/employedashboard/candidateprofile/:email",async(req,res)=>{
+      const remail = req.params.email;
+      // console.log(remail)
+      const query = { email: remail}
+      const result = await candidateProfileCollection.findOne(query);
+      res.send(result);
+    })
+    app.get("/employedashboard/appliedjobs/:email",async(req,res)=>{
+      const remail = req.params.email;
+      // console.log(remail)
+      const query = { applicant_email: remail}
+      const result = await appliedJobCollection.find(query).toArray();
+      res.send(result);
+    })
+    app.get("/employedashboard/savedjobs/:email",async(req,res)=>{
+      const remail = req.params.email;
+      console.log('svaejob',remail)
+      const query = { applicant_email: remail}
+      const result = await savedJobCollection.find(query).toArray();
+      res.send(result);
+    })
+    app.delete('/deleteAppliedJob', async (req, res) => {
+      const email = req.query.email;
+      const idOfJob = req.query._id;
+      //   console.log(email,idOfJob);
+      const query = { applicant_email: email, jobId: idOfJob };
+      const findJob = await appliedJobCollection.deleteOne(query);
+      res.send(findJob);
+    })
     // employee dashboard Routes end
   }
   finally {
